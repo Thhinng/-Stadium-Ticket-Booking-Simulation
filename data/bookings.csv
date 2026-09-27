@@ -1,0 +1,3 @@
+bookingId,userId,matchId,matchName,totalAmount,bookingTime,status,paymentMethod,transactionId
+BK-680854,TEST_USER_BACH,M001,"Vi?t Nam vs Thái Lan (Chung K?t AFF Cup)",400000,00,14:04:40 27/09/2026,CANCELLED,,
+BK-680565,TEST_USER_BACH,M001,"Vi?t Nam vs Thái Lan (Chung K?t AFF Cup)",3000000,00,14:04:40 27/09/2026,REFUNDED,VNPay QR,TXN-1790492680851
