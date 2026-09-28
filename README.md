@@ -25,7 +25,7 @@
   * Danh sách sự kiện, trận đấu đang mở bán.
   * Tìm kiếm và lọc theo thời gian, địa điểm, đội bóng, loại vé hoặc khoảng giá.
 * **Sơ đồ Ghế ngồi Trực quan (Seat Map):**
-  * Hiển thị cấu trúc khán đài/khu vực (SVIP, VIP, Thường, Đứng).
+  * Hiển thị cấu trúc khán đài/khu vực.
   * Hiển thị trạng thái ghế theo thời gian thực: Trống (`Available`), Đang chọn/Giữ chỗ (`Locked`), và Đã bán (`Booked`).
 * **Đặt vé & Giữ chỗ:**
   * Chọn ghế trực tiếp trên sơ đồ.
