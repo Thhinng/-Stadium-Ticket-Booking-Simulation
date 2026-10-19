@@ -19,7 +19,7 @@
 ### 1. Nhóm tính năng cho Người mua (User / Fan)
 
 * **Quản lý Tài khoản & Xác thực:**
-  * Đăng ký, đăng nhập, đổi mật khẩu và quản lý thông tin cá nhân.
+  * Đổi mật khẩu và quản lý thông tin cá nhân.
   * Quản lý danh sách vé đã mua và lịch sử giao dịch.
 * **Tra cứu Sự kiện / Trận đấu:**
   * Danh sách sự kiện, trận đấu đang mở bán.
