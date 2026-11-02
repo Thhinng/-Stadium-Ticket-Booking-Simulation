@@ -1,7 +1,7 @@
-package app.service;
+package service;
 
-import app.model.TransactionLog;
-import app.model.TransactionType;
+import model.TransactionLog;
+import model.TransactionType;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -62,9 +62,14 @@ public class ReportService {
      * định qua getStatus() — ReportService không cần biết Ticket là gì.)
      */
     public double getTotalRevenue(List<Double> paidTicketPrices) {
+        if (paidTicketPrices == null) {
+            return 0.0;
+        }
         double total = 0.0;
-        for (double price : paidTicketPrices) {
-            total += price;
+        for (Double price : paidTicketPrices) {
+            if (price != null) {
+                total += price;
+            }
         }
         return total;
     }
@@ -77,6 +82,9 @@ public class ReportService {
      */
     public Map<String, Double> getRevenueByMatch(Map<String, List<Double>> paidPricesByMatch) {
         Map<String, Double> result = new LinkedHashMap<>();
+        if (paidPricesByMatch == null) {
+            return result;
+        }
         for (Map.Entry<String, List<Double>> entry : paidPricesByMatch.entrySet()) {
             result.put(entry.getKey(), getTotalRevenue(entry.getValue()));
         }
@@ -104,10 +112,13 @@ public class ReportService {
     public Map<String, Double> getOccupancyReport(Map<String, Integer> occupiedSeatsByMatch,
                                                    Map<String, Integer> totalSeatsByMatch) {
         Map<String, Double> result = new LinkedHashMap<>();
+        if (totalSeatsByMatch == null) {
+            return result;
+        }
         for (String matchId : totalSeatsByMatch.keySet()) {
-            int occupied = occupiedSeatsByMatch.getOrDefault(matchId, 0);
-            int total = totalSeatsByMatch.get(matchId);
-            result.put(matchId, getOccupancyRate(occupied, total));
+            int occupied = (occupiedSeatsByMatch != null) ? occupiedSeatsByMatch.getOrDefault(matchId, 0) : 0;
+            Integer total = totalSeatsByMatch.get(matchId);
+            result.put(matchId, getOccupancyRate(occupied, total != null ? total : 0));
         }
         return result;
     }
@@ -123,7 +134,7 @@ public class ReportService {
     public List<TransactionLog> queryLogs(String username, TransactionType type,
                                            LocalDateTime from, LocalDateTime to) {
         return transactionLogs.stream()
-                .filter(l -> username == null || username.isBlank() || l.getUsername().equalsIgnoreCase(username))
+                .filter(l -> username == null || username.trim().isEmpty() || l.getUsername().equalsIgnoreCase(username.trim()))
                 .filter(l -> type == null || l.getType() == type)
                 .filter(l -> from == null || !l.getTimestamp().isBefore(from))
                 .filter(l -> to == null || !l.getTimestamp().isAfter(to))
@@ -136,6 +147,7 @@ public class ReportService {
 
     /** Đọc toàn bộ nhật ký từ file CSV (mỗi dòng 1 giao dịch), nạp vào bộ nhớ. */
     public void loadLogsFromCsv(String filePath) throws IOException {
+        if (filePath == null) return;
         File file = new File(filePath);
         if (!file.exists()) return;
 
@@ -145,13 +157,13 @@ public class ReportService {
             int maxId = 0;
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.isBlank()) continue;
-                TransactionLog log = TransactionLog.fromCsvLine(line);
-                transactionLogs.add(log);
+                if (line.trim().isEmpty()) continue;
                 try {
+                    TransactionLog log = TransactionLog.fromCsvLine(line);
+                    transactionLogs.add(log);
                     maxId = Math.max(maxId, Integer.parseInt(log.getLogId().replace("LOG", "")));
-                } catch (NumberFormatException ignored) {
-                    // bỏ qua nếu logId không đúng định dạng LOGxxxx
+                } catch (Exception ignored) {
+                    // bỏ qua dòng lỗi hoặc không đúng định dạng
                 }
             }
             logCounter = maxId + 1;
@@ -160,8 +172,13 @@ public class ReportService {
 
     /** Ghi toàn bộ nhật ký hiện có ra file CSV. */
     public void saveLogsToCsv(String filePath) throws IOException {
+        if (filePath == null) return;
+        File file = new File(filePath);
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
         try (BufferedWriter bw = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8))) {
+                new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             for (TransactionLog log : transactionLogs) {
                 bw.write(log.toCsvLine());
                 bw.newLine();

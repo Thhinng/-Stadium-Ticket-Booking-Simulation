@@ -1,4 +1,4 @@
-package app.model;
+package model;
 
 /**
  * Loại giao dịch được ghi vào nhật ký hệ thống (TransactionLog).

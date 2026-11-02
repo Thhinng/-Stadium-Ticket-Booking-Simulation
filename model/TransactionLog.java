@@ -1,4 +1,4 @@
-package app.model;
+package model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -50,14 +50,20 @@ public class TransactionLog {
 
     /** Dựng lại 1 TransactionLog từ 1 dòng CSV (ngược với toCsvLine()). */
     public static TransactionLog fromCsvLine(String line) {
+        if (line == null) {
+            throw new IllegalArgumentException("Dòng CSV không được null");
+        }
         String[] p = line.split(",", -1);
+        if (p.length < 6) {
+            throw new IllegalArgumentException("Dòng CSV không đúng định dạng TransactionLog: " + line);
+        }
         return new TransactionLog(
-                p[0],
-                LocalDateTime.parse(p[1], FORMAT),
-                p[2],
-                TransactionType.valueOf(p[3]),
+                p[0].trim(),
+                LocalDateTime.parse(p[1].trim(), FORMAT),
+                p[2].trim(),
+                TransactionType.valueOf(p[3].trim()),
                 p[4],
-                Double.parseDouble(p[5]));
+                Double.parseDouble(p[5].trim()));
     }
 
     @Override

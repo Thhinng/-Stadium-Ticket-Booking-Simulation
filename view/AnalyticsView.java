@@ -1,4 +1,4 @@
-package app.view;
+package view;
 
 import java.util.Map;
 
@@ -8,6 +8,14 @@ import java.util.Map;
  * thành viên khác. Hiển thị dạng bảng trên console.
  */
 public class AnalyticsView {
+
+    private String repeat(String str, int count) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            sb.append(str);
+        }
+        return sb.toString();
+    }
 
     public void showTotalRevenue(double totalRevenue) {
         System.out.println();
@@ -19,13 +27,15 @@ public class AnalyticsView {
         System.out.println();
         System.out.println("========== DOANH THU THEO TỪNG TRẬN ĐẤU ==========");
         System.out.printf("%-12s | %15s%n", "Mã trận", "Doanh thu (đ)");
-        System.out.println("-".repeat(32));
+        System.out.println(repeat("-", 32));
         double total = 0;
-        for (Map.Entry<String, Double> e : revenueByMatch.entrySet()) {
-            System.out.printf("%-12s | %,15.0f%n", e.getKey(), e.getValue());
-            total += e.getValue();
+        if (revenueByMatch != null) {
+            for (Map.Entry<String, Double> e : revenueByMatch.entrySet()) {
+                System.out.printf("%-12s | %,15.0f%n", e.getKey(), e.getValue());
+                total += e.getValue();
+            }
         }
-        System.out.println("-".repeat(32));
+        System.out.println(repeat("-", 32));
         System.out.printf("%-12s | %,15.0f%n", "TỔNG", total);
     }
 
@@ -38,11 +48,13 @@ public class AnalyticsView {
         System.out.println();
         System.out.println("========== BÁO CÁO TỶ LỆ LẤP ĐẦY SÂN ==========");
         System.out.printf("%-12s | %10s | %12s%n", "Mã trận", "Tổng ghế", "Lấp đầy (%)");
-        System.out.println("-".repeat(42));
-        for (Map.Entry<String, Double> e : occupancyByMatch.entrySet()) {
-            String matchId = e.getKey();
-            int totalSeats = totalSeatsByMatch.getOrDefault(matchId, 0);
-            System.out.printf("%-12s | %10d | %11.1f%%%n", matchId, totalSeats, e.getValue());
+        System.out.println(repeat("-", 42));
+        if (occupancyByMatch != null) {
+            for (Map.Entry<String, Double> e : occupancyByMatch.entrySet()) {
+                String matchId = e.getKey();
+                int totalSeats = (totalSeatsByMatch != null) ? totalSeatsByMatch.getOrDefault(matchId, 0) : 0;
+                System.out.printf("%-12s | %10d | %11.1f%%%n", matchId, totalSeats, e.getValue());
+            }
         }
     }
 }
