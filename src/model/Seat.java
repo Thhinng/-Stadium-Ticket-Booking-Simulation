@@ -1,40 +1,66 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package model;
 
-public class Seat {
-    private String seatId;
-    private String section;
-    private String row;
-    private String number;
-    private SeatStatus status;
+public class Seat extends BaseEntity {
+    private String sectionId;
+    private String matchId;
+    private String seatNumber;
+    private String status;
+    private int version;
 
-    public Seat(String seatId, String section, String row, String number, SeatStatus status) {
-        this.seatId = seatId;
-        this.section = section;
-        this.row = row;
-        this.number = number;
+    public Seat() {
+    }
+
+    public Seat(String id, String sectionId, String matchId, String seatNumber, String status, int version) {
+        super(id);
+        this.sectionId = sectionId;
+        this.matchId = matchId;
+        this.seatNumber = seatNumber;
+        this.status = status;
+        this.version = version;
+    }
+
+    public String getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(String sectionId) {
+        this.sectionId = sectionId;
+    }
+
+    public String getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(String matchId) {
+        this.matchId = matchId;
+    }
+
+    public String getSeatNumber() {
+        return seatNumber;
+    }
+
+    public void setSeatNumber(String seatNumber) {
+        this.seatNumber = seatNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public boolean isAvailable() {
-        return this.status == SeatStatus.AVAILABLE;
+    public int getVersion() {
+        return version;
     }
-    public void lock() {
-        if (this.status == SeatStatus.AVAILABLE) {
-            this.status = SeatStatus.LOCKED;
-        }
-    }
-    public void unlock() {
-        if (this.status == SeatStatus.LOCKED) {
-            this.status = SeatStatus.AVAILABLE;
-        }
-    }
-    public void setStatus(SeatStatus status) {
-        this.status = status;
-    }
-    public String getSeatId() { return seatId;}
-    public String getSection() { return section;}
-    public String getRow() { return row;}
-    public String getNumber() { return number;}
-    public SeatStatus getStatus() { return status;}
 
+    public void setVersion(int version) {
+        this.version = version;
+    }
+    
 }

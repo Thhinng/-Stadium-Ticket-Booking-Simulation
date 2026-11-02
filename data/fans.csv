@@ -1,0 +1,51 @@
+fanId,username,password,fullName,email,phone,balance
+FAN-039,fan_user_39,pass123,Fan User 39,fan_user_39@fpt.edu.vn,0910000039,5000.00
+FAN-038,fan_user_38,pass123,Fan User 38,fan_user_38@fpt.edu.vn,0910000038,5000.00
+FAN-037,fan_user_37,pass123,Fan User 37,fan_user_37@fpt.edu.vn,0910000037,5000.00
+FAN-036,fan_user_36,pass123,Fan User 36,fan_user_36@fpt.edu.vn,0910000036,5000.00
+FAN-035,fan_user_35,pass123,Fan User 35,fan_user_35@fpt.edu.vn,0910000035,5000.00
+FAN-034,fan_user_34,pass123,Fan User 34,fan_user_34@fpt.edu.vn,0910000034,5000.00
+FAN-033,fan_user_33,pass123,Fan User 33,fan_user_33@fpt.edu.vn,0910000033,5000.00
+FAN-032,fan_user_32,pass123,Fan User 32,fan_user_32@fpt.edu.vn,0910000032,5000.00
+FAN-031,fan_user_31,pass123,Fan User 31,fan_user_31@fpt.edu.vn,0910000031,5000.00
+FAN-030,fan_user_30,pass123,Fan User 30,fan_user_30@fpt.edu.vn,0910000030,5000.00
+FAN-029,fan_user_29,pass123,Fan User 29,fan_user_29@fpt.edu.vn,0910000029,5000.00
+FAN-028,fan_user_28,pass123,Fan User 28,fan_user_28@fpt.edu.vn,0910000028,5000.00
+FAN-027,fan_user_27,pass123,Fan User 27,fan_user_27@fpt.edu.vn,0910000027,5000.00
+FAN-026,fan_user_26,pass123,Fan User 26,fan_user_26@fpt.edu.vn,0910000026,5000.00
+FAN-025,fan_user_25,pass123,Fan User 25,fan_user_25@fpt.edu.vn,0910000025,5000.00
+FAN-024,fan_user_24,pass123,Fan User 24,fan_user_24@fpt.edu.vn,0910000024,5000.00
+FAN-023,fan_user_23,pass123,Fan User 23,fan_user_23@fpt.edu.vn,0910000023,5000.00
+FAN-022,fan_user_22,pass123,Fan User 22,fan_user_22@fpt.edu.vn,0910000022,5000.00
+FAN-021,fan_user_21,pass123,Fan User 21,fan_user_21@fpt.edu.vn,0910000021,5000.00
+FAN-020,fan_user_20,pass123,Fan User 20,fan_user_20@fpt.edu.vn,0910000020,5000.00
+FAN-019,fan_user_19,pass123,Fan User 19,fan_user_19@fpt.edu.vn,0910000019,5000.00
+FAN-018,fan_user_18,pass123,Fan User 18,fan_user_18@fpt.edu.vn,0910000018,5000.00
+FAN-017,fan_user_17,pass123,Fan User 17,fan_user_17@fpt.edu.vn,0910000017,5000.00
+FAN-016,fan_user_16,pass123,Fan User 16,fan_user_16@fpt.edu.vn,0910000016,5000.00
+FAN-015,fan_user_15,pass123,Fan User 15,fan_user_15@fpt.edu.vn,0910000015,5000.00
+FAN-014,fan_user_14,pass123,Fan User 14,fan_user_14@fpt.edu.vn,0910000014,5000.00
+FAN-013,fan_user_13,pass123,Fan User 13,fan_user_13@fpt.edu.vn,0910000013,5000.00
+FAN-012,fan_user_12,pass123,Fan User 12,fan_user_12@fpt.edu.vn,0910000012,5000.00
+FAN-011,fan_user_11,pass123,Fan User 11,fan_user_11@fpt.edu.vn,0910000011,5000.00
+FAN-010,fan_user_10,pass123,Fan User 10,fan_user_10@fpt.edu.vn,0910000010,5000.00
+FAN-050,fan_user_50,pass123,Fan User 50,fan_user_50@fpt.edu.vn,0910000050,5000.00
+FAN-009,fan_user_9,pass123,Fan User 9,fan_user_9@fpt.edu.vn,0910000009,5000.00
+FAN-008,fan_user_8,pass123,Fan User 8,fan_user_8@fpt.edu.vn,0910000008,5000.00
+FAN-007,fan_user_7,pass123,Fan User 7,fan_user_7@fpt.edu.vn,0910000007,5000.00
+FAN-006,fan_user_6,pass123,Fan User 6,fan_user_6@fpt.edu.vn,0910000006,5000.00
+FAN-005,emma_vu,pass123,Emma Vu,emma@gmail.com,0977889900,250.00
+FAN-049,fan_user_49,pass123,Fan User 49,fan_user_49@fpt.edu.vn,0910000049,5000.00
+FAN-004,david_pham,pass123,David Pham,david@gmail.com,0933445566,800.00
+FAN-048,fan_user_48,pass123,Fan User 48,fan_user_48@fpt.edu.vn,0910000048,5000.00
+FAN-003,sarah_le,pass123,Sarah Le,sarah@gmail.com,0901122334,350.00
+FAN-047,fan_user_47,pass123,Fan User 47,fan_user_47@fpt.edu.vn,0910000047,5000.00
+FAN-002,john_tran,pass123,John Tran,john@gmail.com,0987654321,1200.00
+FAN-046,fan_user_46,pass123,Fan User 46,fan_user_46@fpt.edu.vn,0910000046,5000.00
+FAN-001,alex_nguyen,pass123,Alex Nguyen,alex@gmail.com,0912345678,500.00
+FAN-045,fan_user_45,pass123,Fan User 45,fan_user_45@fpt.edu.vn,0910000045,5000.00
+FAN-044,fan_user_44,pass123,Fan User 44,fan_user_44@fpt.edu.vn,0910000044,5000.00
+FAN-043,fan_user_43,pass123,Fan User 43,fan_user_43@fpt.edu.vn,0910000043,5000.00
+FAN-042,fan_user_42,pass123,Fan User 42,fan_user_42@fpt.edu.vn,0910000042,5000.00
+FAN-041,fan_user_41,pass123,Fan User 41,fan_user_41@fpt.edu.vn,0910000041,5000.00
+FAN-040,fan_user_40,pass123,Fan User 40,fan_user_40@fpt.edu.vn,0910000040,5000.00

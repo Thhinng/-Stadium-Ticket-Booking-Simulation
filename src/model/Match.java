@@ -1,72 +1,67 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package model;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.ArrayList;
-
-public class Match {
-    private String matchId;
+public class Match extends BaseEntity{
     private String homeTeam;
     private String awayTeam;
-    private LocalDateTime matchDate;
-    private MatchStatus status;
-    private List<Seat> seats = new ArrayList<>();
+    private String stadiumId;
+    private String matchDate;
+    private String status;
 
-    public Match(String matchId, String homeTeam, String awayTeam, LocalDateTime matchDate, MatchStatus status) {
-        this.matchId = matchId;
+    public Match() {
+    }
+    
+    public Match(String id, String homeTeam, String awayTeam, String stadiumId, String matchDate, String status) {
+        super(id);
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
+        this.stadiumId = stadiumId;
         this.matchDate = matchDate;
         this.status = status;
-    }
-
-    public void updateMatch(String homeTeam, String awayTeam, LocalDateTime matchDate) {
-        this.homeTeam = homeTeam;
-        this.awayTeam = awayTeam;
-        this.matchDate = matchDate;
-    }
-
-    public void cancelMatch() {
-        this.status = MatchStatus.CANCELLED;
-
-    }
-
-    public List<Seat> getAvailableSeats() {
-        List<Seat> availableList = new ArrayList<>();
-        for (Seat seat : seats) {
-            if (seat.isAvailable()) {
-                availableList.add(seat);
-            }
-        }
-        return availableList;
-    }
-
-    public String getMatchId() {
-        return matchId;
     }
 
     public String getHomeTeam() {
         return homeTeam;
     }
 
+    public void setHomeTeam(String homeTeam) {
+        this.homeTeam = homeTeam;
+    }
+
     public String getAwayTeam() {
         return awayTeam;
     }
 
-    public LocalDateTime getMatchDate() {
-        return matchDate;
-
+    public void setAwayTeam(String awayTeam) {
+        this.awayTeam = awayTeam;
     }
 
-    public MatchStatus getStatus() {
+    public String getStadiumId() {
+        return stadiumId;
+    }
+
+    public void setStadiumId(String stadiumId) {
+        this.stadiumId = stadiumId;
+    }
+
+    public String getMatchDate() {
+        return matchDate;
+    }
+
+    public void setMatchDate(String matchDate) {
+        this.matchDate = matchDate;
+    }
+
+    public String getStatus() {
         return status;
     }
 
-    public List<Seat> getSeats() {
-        return seats;
+    public void setStatus(String status) {
+        this.status = status;
     }
-
-    public void setSeats(List<Seat> seats) {
-        this.seats = seats;
-    }
+    
+    
 }
