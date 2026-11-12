@@ -16,7 +16,7 @@ public class ConsoleView {
         System.out.print(prompt);
         System.out.flush();
         try {
-            String value = reader.readLine();
+            String value = this.reader.readLine();
             if (value == null) throw new NoSuchElementException("Đã kết thúc nhập liệu.");
             return value.trim();
         } catch (IOException ex) {
@@ -31,7 +31,7 @@ public class ConsoleView {
      */
     public String askPassword(String prompt) {
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            String value = askPasswordWithStars(prompt);
+            String value = this.askPasswordWithStars(prompt);
             if (value != null) {
                 return value;
             }
@@ -56,7 +56,7 @@ public class ConsoleView {
             throw new IllegalStateException(
                     "Không bật được chế độ nhập mật khẩu ẩn. Hãy chạy trong Terminal của VS Code hoặc PowerShell.");
         }
-        return ask(prompt);
+        return this.ask(prompt);
     }
 
     /**
@@ -118,29 +118,29 @@ public class ConsoleView {
 
     public int askInt(String prompt) {
         while (true) {
-            try { return Integer.parseInt(ask(prompt)); }
-            catch (NumberFormatException ex) { error("Vui lòng nhập một số nguyên."); }
+            try { return Integer.parseInt(this.ask(prompt)); }
+            catch (NumberFormatException ex) { this.error("Vui lòng nhập một số nguyên."); }
         }
     }
 
     public long askLong(String prompt) {
         while (true) {
-            try { return Long.parseLong(ask(prompt).replace(",", "").replace(".", "")); }
-            catch (NumberFormatException ex) { error("Vui lòng nhập số tiền nguyên, ví dụ: 250000."); }
+            try { return Long.parseLong(this.ask(prompt).replace(",", "").replace(".", "")); }
+            catch (NumberFormatException ex) { this.error("Vui lòng nhập số tiền nguyên, ví dụ: 250000."); }
         }
     }
 
     public boolean confirm(String prompt) {
         while (true) {
-            String ans = ask(prompt + " (y/n): ").toLowerCase();
+            String ans = this.ask(prompt + " (y/n): ").toLowerCase();
             if (ans.equals("y") || ans.equals("yes") || ans.equals("c") || ans.equals("co")) return true;
             if (ans.equals("n") || ans.equals("no") || ans.equals("k") || ans.equals("khong")) return false;
-            error("Nhập y hoặc n.");
+            this.error("Nhập y hoặc n.");
         }
     }
 
     public void line() { System.out.println("===================================================================="); }
-    public void title(String text) { System.out.println(); line(); System.out.println(" " + text); line(); }
+    public void title(String text) { System.out.println(); this.line(); System.out.println(" " + text); this.line(); }
     public void info(String text) { System.out.println("[THÔNG BÁO] " + text); }
     public void success(String text) { System.out.println("[THÀNH CÔNG] " + text); }
     public void error(String text) { System.out.println("[LỖI] " + text); }

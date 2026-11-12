@@ -16,31 +16,31 @@ public class FileRepository {
         this.file = dataDirectory.resolve("stadium.properties");
     }
 
-    public boolean exists() { return Files.exists(file); }
+    public boolean exists() { return Files.exists(this.file); }
 
     public Database load() {
         Properties p = new Properties();
-        try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+        try (Reader reader = Files.newBufferedReader(this.file, StandardCharsets.UTF_8)) {
             p.load(reader);
             if (!"1".equals(p.getProperty("format"))) {
                 throw new IllegalStateException("Phiên bản dữ liệu không được hỗ trợ");
             }
             Database d = new Database();
-            d.nextUserId = num(p, "next.user");
-            d.nextEventId = num(p, "next.event");
-            d.nextHoldId = num(p, "next.hold");
-            d.nextOrderId = num(p, "next.order");
-            d.nextPaymentId = num(p, "next.payment");
+            d.setNextUserId(num(p, "next.user"));
+            d.setNextEventId(num(p, "next.event"));
+            d.setNextHoldId(num(p, "next.hold"));
+            d.setNextOrderId(num(p, "next.order"));
+            d.setNextPaymentId(num(p, "next.payment"));
 
             for (int i = 0; i < num(p, "users.count"); i++) {
                 String k = "users." + i + ".";
-                d.users.add(new User(num(p, k + "id"), Role.valueOf(str(p, k + "role")),
+                d.getUsers().add(new User(num(p, k + "id"), Role.valueOf(str(p, k + "role")),
                         str(p, k + "username"), str(p, k + "name"), str(p, k + "salt"),
                         str(p, k + "hash"), Boolean.parseBoolean(str(p, k + "active")), lng(p, k + "created")));
             }
             for (int i = 0; i < num(p, "sections.count"); i++) {
                 String k = "sections." + i + ".";
-                d.sections.add(new Section(str(p, k + "code"), str(p, k + "name"),
+                d.getSections().add(new Section(str(p, k + "code"), str(p, k + "name"),
                         num(p, k + "capacity"), lng(p, k + "price"), Boolean.parseBoolean(str(p, k + "active"))));
             }
             for (int i = 0; i < num(p, "events.count"); i++) {
@@ -49,119 +49,119 @@ public class FileRepository {
                         str(p, k + "competition"), lng(p, k + "starts"), EventStatus.valueOf(str(p, k + "status")));
                 int n = num(p, k + "priceCount");
                 for (int j = 0; j < n; j++) {
-                    e.zonePrices.put(str(p, k + "zone." + j + ".code"), lng(p, k + "zone." + j + ".price"));
+                    e.putZonePrice(str(p, k + "zone." + j + ".getCode()"), lng(p, k + "zone." + j + ".price"));
                 }
-                d.events.add(e);
+                d.getEvents().add(e);
             }
             for (int i = 0; i < num(p, "holds.count"); i++) {
                 String k = "holds." + i + ".";
-                d.holds.add(new Hold(num(p, k + "id"), num(p, k + "user"), num(p, k + "event"),
+                d.getHolds().add(new Hold(num(p, k + "id"), num(p, k + "user"), num(p, k + "event"),
                         seats(str(p, k + "seats")), lng(p, k + "total"), lng(p, k + "created"), lng(p, k + "expires")));
             }
             for (int i = 0; i < num(p, "orders.count"); i++) {
                 String k = "orders." + i + ".";
-                d.orders.add(new Order(num(p, k + "id"), num(p, k + "user"), num(p, k + "event"),
+                d.getOrders().add(new Order(num(p, k + "id"), num(p, k + "user"), num(p, k + "event"),
                         seats(str(p, k + "seats")), lng(p, k + "total"), lng(p, k + "created"),
                         OrderStatus.valueOf(str(p, k + "status")), str(p, k + "method"), str(p, k + "reference")));
             }
             for (int i = 0; i < num(p, "payments.count"); i++) {
                 String k = "payments." + i + ".";
-                d.payments.add(new PaymentRecord(num(p, k + "id"), num(p, k + "user"), num(p, k + "order"),
+                d.getPayments().add(new PaymentRecord(num(p, k + "id"), num(p, k + "user"), num(p, k + "order"),
                         str(p, k + "type"), str(p, k + "method"), str(p, k + "result"),
                         lng(p, k + "amount"), str(p, k + "reference"), lng(p, k + "created")));
             }
             return d;
         } catch (IOException | RuntimeException ex) {
-            throw new IllegalStateException("Không đọc được dữ liệu " + file + ". Kiểm tra file, KHÔNG xóa dữ liệu cũ.", ex);
+            throw new IllegalStateException("Không đọc được dữ liệu " + this.file + ". Kiểm tra file, KHÔNG xóa dữ liệu cũ.", ex);
         }
     }
 
     public void save(Database d) {
         Properties p = new Properties();
         put(p, "format", 1);
-        put(p, "next.user", d.nextUserId);
-        put(p, "next.event", d.nextEventId);
-        put(p, "next.hold", d.nextHoldId);
-        put(p, "next.order", d.nextOrderId);
-        put(p, "next.payment", d.nextPaymentId);
-        put(p, "users.count", d.users.size());
-        for (int i = 0; i < d.users.size(); i++) {
-            User u = d.users.get(i);
+        put(p, "next.user", d.getNextUserId());
+        put(p, "next.event", d.getNextEventId());
+        put(p, "next.hold", d.getNextHoldId());
+        put(p, "next.order", d.getNextOrderId());
+        put(p, "next.payment", d.getNextPaymentId());
+        put(p, "users.count", d.getUsers().size());
+        for (int i = 0; i < d.getUsers().size(); i++) {
+            User u = d.getUsers().get(i);
             String k = "users." + i + ".";
-            put(p, k + "id", u.id); put(p, k + "role", u.role);
-            put(p, k + "username", u.username); put(p, k + "name", u.name);
-            put(p, k + "salt", u.salt); put(p, k + "hash", u.passwordHash);
-            put(p, k + "active", u.active); put(p, k + "created", u.createdAt);
+            put(p, k + "id", u.getId()); put(p, k + "role", u.getRole());
+            put(p, k + "username", u.getUsername()); put(p, k + "name", u.getName());
+            put(p, k + "salt", u.getSalt()); put(p, k + "hash", u.getPasswordHash());
+            put(p, k + "active", u.getActive()); put(p, k + "created", u.getCreatedAt());
         }
-        put(p, "sections.count", d.sections.size());
-        for (int i = 0; i < d.sections.size(); i++) {
-            Section s = d.sections.get(i);
+        put(p, "sections.count", d.getSections().size());
+        for (int i = 0; i < d.getSections().size(); i++) {
+            Section s = d.getSections().get(i);
             String k = "sections." + i + ".";
-            put(p, k + "code", s.code); put(p, k + "name", s.name);
-            put(p, k + "capacity", s.capacity); put(p, k + "price", s.basePrice);
-            put(p, k + "active", s.active);
+            put(p, k + "code", s.getCode()); put(p, k + "name", s.getName());
+            put(p, k + "capacity", s.getCapacity()); put(p, k + "price", s.getBasePrice());
+            put(p, k + "active", s.getActive());
         }
-        put(p, "events.count", d.events.size());
-        for (int i = 0; i < d.events.size(); i++) {
-            Event e = d.events.get(i);
+        put(p, "events.count", d.getEvents().size());
+        for (int i = 0; i < d.getEvents().size(); i++) {
+            Event e = d.getEvents().get(i);
             String k = "events." + i + ".";
-            put(p, k + "id", e.id); put(p, k + "home", e.home);
-            put(p, k + "away", e.away); put(p, k + "competition", e.competition);
-            put(p, k + "starts", e.startsAt); put(p, k + "status", e.status);
-            put(p, k + "priceCount", e.zonePrices.size());
+            put(p, k + "id", e.getId()); put(p, k + "home", e.getHome());
+            put(p, k + "away", e.getAway()); put(p, k + "competition", e.getCompetition());
+            put(p, k + "starts", e.getStartsAt()); put(p, k + "status", e.getStatus());
+            put(p, k + "priceCount", e.getZonePrices().size());
             int j = 0;
-            for (Map.Entry<String, Long> en : e.zonePrices.entrySet()) {
-                put(p, k + "zone." + j + ".code", en.getKey());
+            for (Map.Entry<String, Long> en : e.getZonePrices().entrySet()) {
+                put(p, k + "zone." + j + ".getCode()", en.getKey());
                 put(p, k + "zone." + j + ".price", en.getValue());
                 j++;
             }
         }
-        put(p, "holds.count", d.holds.size());
-        for (int i = 0; i < d.holds.size(); i++) {
-            Hold h = d.holds.get(i);
+        put(p, "holds.count", d.getHolds().size());
+        for (int i = 0; i < d.getHolds().size(); i++) {
+            Hold h = d.getHolds().get(i);
             String k = "holds." + i + ".";
-            put(p, k + "id", h.id); put(p, k + "user", h.userId);
-            put(p, k + "event", h.eventId); put(p, k + "seats", String.join(",", h.seatIds));
-            put(p, k + "total", h.total); put(p, k + "created", h.createdAt);
-            put(p, k + "expires", h.expiresAt);
+            put(p, k + "id", h.getId()); put(p, k + "user", h.getUserId());
+            put(p, k + "event", h.getEventId()); put(p, k + "seats", String.join(",", h.getSeatIds()));
+            put(p, k + "total", h.getTotal()); put(p, k + "created", h.getCreatedAt());
+            put(p, k + "expires", h.getExpiresAt());
         }
-        put(p, "orders.count", d.orders.size());
-        for (int i = 0; i < d.orders.size(); i++) {
-            Order o = d.orders.get(i);
+        put(p, "orders.count", d.getOrders().size());
+        for (int i = 0; i < d.getOrders().size(); i++) {
+            Order o = d.getOrders().get(i);
             String k = "orders." + i + ".";
-            put(p, k + "id", o.id); put(p, k + "user", o.userId);
-            put(p, k + "event", o.eventId); put(p, k + "seats", String.join(",", o.seatIds));
-            put(p, k + "total", o.total); put(p, k + "created", o.purchasedAt);
-            put(p, k + "status", o.status); put(p, k + "method", o.paymentMethod);
-            put(p, k + "reference", o.paymentReference);
+            put(p, k + "id", o.getId()); put(p, k + "user", o.getUserId());
+            put(p, k + "event", o.getEventId()); put(p, k + "seats", String.join(",", o.getSeatIds()));
+            put(p, k + "total", o.getTotal()); put(p, k + "created", o.getPurchasedAt());
+            put(p, k + "status", o.getStatus()); put(p, k + "method", o.getPaymentMethod());
+            put(p, k + "reference", o.getPaymentReference());
         }
-        put(p, "payments.count", d.payments.size());
-        for (int i = 0; i < d.payments.size(); i++) {
-            PaymentRecord r = d.payments.get(i);
+        put(p, "payments.count", d.getPayments().size());
+        for (int i = 0; i < d.getPayments().size(); i++) {
+            PaymentRecord r = d.getPayments().get(i);
             String k = "payments." + i + ".";
-            put(p, k + "id", r.id); put(p, k + "user", r.userId);
-            put(p, k + "order", r.orderId); put(p, k + "type", r.type);
-            put(p, k + "method", r.method); put(p, k + "result", r.result);
-            put(p, k + "amount", r.amount); put(p, k + "reference", r.reference);
-            put(p, k + "created", r.createdAt);
+            put(p, k + "id", r.getId()); put(p, k + "user", r.getUserId());
+            put(p, k + "order", r.getOrderId()); put(p, k + "type", r.getType());
+            put(p, k + "method", r.getMethod()); put(p, k + "result", r.getResult());
+            put(p, k + "amount", r.getAmount()); put(p, k + "reference", r.getReference());
+            put(p, k + "created", r.getCreatedAt());
         }
         try {
-            Files.createDirectories(file.getParent());
-            Path temp = Files.createTempFile(file.getParent(), "stadium-", ".tmp");
+            Files.createDirectories(this.file.getParent());
+            Path temp = Files.createTempFile(this.file.getParent(), "stadium-", ".tmp");
             try {
                 try (Writer writer = Files.newBufferedWriter(temp, StandardCharsets.UTF_8)) {
                     p.store(writer, "Stadium ticketing demo - UTF-8");
                 }
                 try {
-                    Files.move(temp, file, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+                    Files.move(temp, this.file, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
                 } catch (AtomicMoveNotSupportedException ex) {
-                    Files.move(temp, file, StandardCopyOption.REPLACE_EXISTING);
+                    Files.move(temp, this.file, StandardCopyOption.REPLACE_EXISTING);
                 }
             } finally {
                 Files.deleteIfExists(temp);
             }
         } catch (IOException ex) {
-            throw new IllegalStateException("Không lưu được dữ liệu vào " + file, ex);
+            throw new IllegalStateException("Không lưu được dữ liệu vào " + this.file, ex);
         }
     }
 

@@ -23,46 +23,46 @@ public class AppController {
 
     public AppController(AuthService authService, EventService eventService,
                          BookingService bookingService, AdminService adminService) {
-        console = new ConsoleView();
-        authView = new AuthView(console);
-        FanView fanView = new FanView(console);
+        this.console = new ConsoleView();
+        this.authView = new AuthView(this.console);
+        FanView fanView = new FanView(this.console);
 
-        authController = new AuthController(authService, authView, console);
-        guestController = new GuestController(eventService, new GuestView(console), console);
-        fanController = new FanController(authService, eventService, bookingService, fanView, console);
-        adminController = new AdminController(authService, eventService, bookingService,
-                adminService, new AdminView(console), fanView, console);
+        this.authController = new AuthController(authService, this.authView, this.console);
+        this.guestController = new GuestController(eventService, new GuestView(this.console), this.console);
+        this.fanController = new FanController(authService, eventService, bookingService, fanView, this.console);
+        this.adminController = new AdminController(authService, eventService, bookingService,
+                adminService, new AdminView(this.console), fanView, this.console);
     }
 
     public void run() {
         while (true) {
-            authView.showWelcome();
-            int choice = console.askInt("Chọn chức năng > ");
+            this.authView.showWelcome();
+            int choice = this.console.askInt("Chọn chức năng > ");
 
             try {
                 switch (choice) {
                     case 1:
-                        guestController.run();
+                        this.guestController.run();
                         break;
                     case 2:
-                        User fan = authController.login(Role.FAN);
-                        fanController.run(fan);
+                        User fan = this.authController.login(Role.FAN);
+                        this.fanController.run(fan);
                         break;
                     case 3:
-                        authController.registerFan();
+                        this.authController.registerFan();
                         break;
                     case 4:
-                        User admin = authController.login(Role.ADMIN);
-                        adminController.run(admin);
+                        User admin = this.authController.login(Role.ADMIN);
+                        this.adminController.run(admin);
                         break;
                     case 0:
-                        console.info("Cảm ơn bạn đã sử dụng Stadium Ticketing!");
+                        this.console.info("Cảm ơn bạn đã sử dụng Stadium Ticketing!");
                         return;
                     default:
-                        console.error("Vui lòng chọn chức năng có trong menu.");
+                        this.console.error("Vui lòng chọn chức năng có trong menu.");
                 }
             } catch (IllegalArgumentException | IllegalStateException e) {
-                console.error(e.getMessage());
+                this.console.error(e.getMessage());
             }
         }
     }

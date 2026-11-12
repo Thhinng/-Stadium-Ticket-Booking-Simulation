@@ -16,114 +16,114 @@ public class AdminService {
         this.booking = booking;
     }
 
-    private void check(int adminId) { auth.requireActive(adminId, Role.ADMIN); }
+    private void check(int adminId) { this.auth.requireActive(adminId, Role.ADMIN); }
 
     public Dashboard dashboard(int adminId) {
-        check(adminId);
-        synchronized (store) {
-            store.expireHolds();
+        this.check(adminId);
+        synchronized (this.store) {
+            this.store.expireHolds();
             Dashboard d = new Dashboard();
-            for (User u : store.db.users) {
-                if (u.role == Role.FAN) {
-                    d.totalFans++;
-                    if (u.active) d.activeFans++;
+            for (User u : this.store.getDatabase().getUsers()) {
+                if (u.getRole() == Role.FAN) {
+                    d.setTotalFans(d.getTotalFans() + 1);
+                    if (u.getActive()) d.setActiveFans(d.getActiveFans() + 1);
                 }
             }
-            for (Event e : store.db.events) {
-                d.totalEvents++;
-                if (e.status == EventStatus.OPEN && e.startsAt > store.now()) d.openEvents++;
+            for (Event e : this.store.getDatabase().getEvents()) {
+                d.setTotalEvents(d.getTotalEvents() + 1);
+                if (e.getStatus() == EventStatus.OPEN && e.getStartsAt() > this.store.now()) d.setOpenEvents(d.getOpenEvents() + 1);
             }
-            for (Order o : store.db.orders) {
-                if (o.status == OrderStatus.PAID) d.paidOrders++;
-                else d.refundedOrders++;
+            for (Order o : this.store.getDatabase().getOrders()) {
+                if (o.getStatus() == OrderStatus.PAID) d.setPaidOrders(d.getPaidOrders() + 1);
+                else d.setRefundedOrders(d.getRefundedOrders() + 1);
             }
-            for (PaymentRecord p : store.db.payments) if (p.result.equals("SUCCESS")) d.netRevenue += p.amount;
-            d.activeHolds = store.db.holds.size();
+            for (PaymentRecord p : this.store.getDatabase().getPayments()) if (p.getResult().equals("SUCCESS")) d.setNetRevenue(d.getNetRevenue() + p.getAmount());
+            d.setActiveHolds(this.store.getDatabase().getHolds().size());
             return d;
         }
     }
 
     public List<User> fans(int adminId, String keyword) {
-        check(adminId);
+        this.check(adminId);
         String q = keyword == null ? "" : keyword.trim().toLowerCase(Locale.ROOT);
-        synchronized (store) {
+        synchronized (this.store) {
             List<User> result = new ArrayList<User>();
-            for (User u : store.db.users) {
-                if (u.role == Role.FAN && (u.username.toLowerCase(Locale.ROOT).contains(q)
-                        || u.name.toLowerCase(Locale.ROOT).contains(q))) result.add(u);
+            for (User u : this.store.getDatabase().getUsers()) {
+                if (u.getRole() == Role.FAN && (u.getUsername().toLowerCase(Locale.ROOT).contains(q)
+                        || u.getName().toLowerCase(Locale.ROOT).contains(q))) result.add(u);
             }
-            result.sort(Comparator.comparingInt(u -> u.id));
+            result.sort(Comparator.comparingInt(u -> u.getId()));
             return result;
         }
     }
 
     public List<Order> fanOrders(int adminId, int fanId) {
-        check(adminId);
-        User fan = auth.getById(fanId);
-        if (fan.role != Role.FAN) throw new IllegalArgumentException("Đây không phải tài khoản Fan.");
-        synchronized (store) {
+        this.check(adminId);
+        User fan = this.auth.getById(fanId);
+        if (fan.getRole() != Role.FAN) throw new IllegalArgumentException("Đây không phải tài khoản Fan.");
+        synchronized (this.store) {
             List<Order> result = new ArrayList<Order>();
-            for (Order o : store.db.orders) if (o.userId == fanId) result.add(o);
-            result.sort((a, b) -> Integer.compare(b.id, a.id));
+            for (Order o : this.store.getDatabase().getOrders()) if (o.getUserId() == fanId) result.add(o);
+            result.sort((a, b) -> Integer.compare(b.getId(), a.getId()));
             return result;
         }
     }
 
     public void setFanActive(int adminId, int fanId, boolean active) {
-        check(adminId);
-        synchronized (store) {
-            User fan = auth.getById(fanId);
-            if (fan.role != Role.FAN) throw new IllegalArgumentException("Chỉ được quản lý tài khoản Fan.");
-            fan.active = active;
-            if (!active) store.db.holds.removeIf(h -> h.userId == fanId);
-            store.save();
+        this.check(adminId);
+        synchronized (this.store) {
+            User fan = this.auth.getById(fanId);
+            if (fan.getRole() != Role.FAN) throw new IllegalArgumentException("Chỉ được quản lý tài khoản Fan.");
+            fan.setActive(active);
+            if (!active) this.store.getDatabase().getHolds().removeIf(h -> h.getUserId() == fanId);
+            this.store.save();
         }
     }
 
     public void resetFanPassword(int adminId, int fanId, String newPassword) {
-        check(adminId);
-        synchronized (store) {
-            User fan = auth.getById(fanId);
-            if (fan.role != Role.FAN) throw new IllegalArgumentException("Chỉ được đặt lại mật khẩu cho Fan.");
-            auth.setPassword(fan, newPassword);
-            store.save();
+        this.check(adminId);
+        synchronized (this.store) {
+            User fan = this.auth.getById(fanId);
+            if (fan.getRole() != Role.FAN) throw new IllegalArgumentException("Chỉ được đặt lại mật khẩu cho Fan.");
+            this.auth.setPassword(fan, newPassword);
+            this.store.save();
         }
     }
 
     public Section addSection(int adminId, String code, String name, int capacity, long price) {
-        check(adminId);
+        this.check(adminId);
         code = code == null ? "" : code.trim().toUpperCase(Locale.ROOT);
         validateSection(code, name, capacity, price);
-        synchronized (store) {
-            for (Section s : store.db.sections) if (s.code.equals(code))
+        synchronized (this.store) {
+            for (Section s : this.store.getDatabase().getSections()) if (s.getCode().equals(code))
                 throw new IllegalArgumentException("Mã khán đài đã tồn tại.");
             Section added = new Section(code, name.trim(), capacity, price, true);
-            store.db.sections.add(added);
-            for (Event e : store.db.events) e.zonePrices.put(code, price);
-            store.save();
+            this.store.getDatabase().getSections().add(added);
+            for (Event e : this.store.getDatabase().getEvents()) e.putZonePrice(code, price);
+            this.store.save();
             return added;
         }
     }
 
     public void editSection(int adminId, String code, String name, int capacity, long price, boolean active) {
-        check(adminId);
-        synchronized (store) {
-            Section section = events.section(code);
-            validateSection(section.code, name, capacity, price);
-            if (capacity < section.capacity) {
-                for (Order o : store.db.orders)
-                    if (o.status == OrderStatus.PAID && hasSeatAbove(o.seatIds, section.code, capacity))
+        this.check(adminId);
+        synchronized (this.store) {
+            Section section = this.events.section(code);
+            validateSection(section.getCode(), name, capacity, price);
+            if (capacity < section.getCapacity()) {
+                for (Order o : this.store.getDatabase().getOrders())
+                    if (o.getStatus() == OrderStatus.PAID && hasSeatAbove(o.getSeatIds(), section.getCode(), capacity))
                         throw new IllegalArgumentException("Không thể giảm sức chứa: có ghế đã bán ngoài phạm vi mới.");
-                store.expireHolds();
-                for (Hold h : store.db.holds)
-                    if (hasSeatAbove(h.seatIds, section.code, capacity))
+                this.store.expireHolds();
+                for (Hold h : this.store.getDatabase().getHolds())
+                    if (hasSeatAbove(h.getSeatIds(), section.getCode(), capacity))
                         throw new IllegalArgumentException("Không thể giảm sức chứa: có ghế đang được giữ ngoài phạm vi mới.");
             }
-            section.name = name.trim();
-            section.capacity = capacity;
-            section.basePrice = price; // affects new events; existing event prices configured separately
-            section.active = active;
-            store.save();
+            section.setName(name.trim());
+            section.setCapacity(capacity);
+            section.setBasePrice(price); // affects new events; existing event prices configured separately
+            section.setActive(active);
+            this.store.save();
         }
     }
 
@@ -147,64 +147,64 @@ public class AdminService {
     }
 
     public List<Order> allOrders(int adminId) {
-        check(adminId);
-        synchronized (store) {
-            List<Order> result = new ArrayList<Order>(store.db.orders);
-            result.sort((a, b) -> Integer.compare(b.id, a.id));
+        this.check(adminId);
+        synchronized (this.store) {
+            List<Order> result = new ArrayList<Order>(this.store.getDatabase().getOrders());
+            result.sort((a, b) -> Integer.compare(b.getId(), a.getId()));
             return result;
         }
     }
 
     public List<PaymentRecord> allPayments(int adminId) {
-        check(adminId);
-        synchronized (store) {
-            List<PaymentRecord> result = new ArrayList<PaymentRecord>(store.db.payments);
-            result.sort((a, b) -> Integer.compare(b.id, a.id));
+        this.check(adminId);
+        synchronized (this.store) {
+            List<PaymentRecord> result = new ArrayList<PaymentRecord>(this.store.getDatabase().getPayments());
+            result.sort((a, b) -> Integer.compare(b.getId(), a.getId()));
             return result;
         }
     }
 
     public List<Hold> allHolds(int adminId) {
-        check(adminId);
-        synchronized (store) {
-            store.expireHolds();
-            return new ArrayList<Hold>(store.db.holds);
+        this.check(adminId);
+        synchronized (this.store) {
+            this.store.expireHolds();
+            return new ArrayList<Hold>(this.store.getDatabase().getHolds());
         }
     }
 
     public void releaseHold(int adminId, int holdId) {
-        check(adminId);
-        synchronized (store) {
-            if (!store.db.holds.removeIf(h -> h.id == holdId))
+        this.check(adminId);
+        synchronized (this.store) {
+            if (!this.store.getDatabase().getHolds().removeIf(h -> h.getId() == holdId))
                 throw new IllegalArgumentException("Không tìm thấy lượt giữ ghế #" + holdId);
-            store.save();
+            this.store.save();
         }
     }
 
     public void refundOrder(int adminId, int orderId) {
-        check(adminId);
-        synchronized (store) {
-            booking.refundInTransaction(booking.findOrder(orderId));
-            store.save();
+        this.check(adminId);
+        synchronized (this.store) {
+            this.booking.refundInTransaction(this.booking.findOrder(orderId));
+            this.store.save();
         }
     }
 
     /** Cancel event, release all outstanding holds, refund every previously paid order (demo). */
     public int cancelEvent(int adminId, int eventId) {
-        check(adminId);
-        synchronized (store) {
-            Event event = events.find(eventId);
-            if (event.status == EventStatus.CANCELLED) throw new IllegalArgumentException("Trận đấu đã bị hủy trước đó.");
-            event.status = EventStatus.CANCELLED;
-            store.db.holds.removeIf(h -> h.eventId == eventId);
+        this.check(adminId);
+        synchronized (this.store) {
+            Event event = this.events.find(eventId);
+            if (event.getStatus() == EventStatus.CANCELLED) throw new IllegalArgumentException("Trận đấu đã bị hủy trước đó.");
+            event.setStatus(EventStatus.CANCELLED);
+            this.store.getDatabase().getHolds().removeIf(h -> h.getEventId() == eventId);
             int count = 0;
-            for (Order o : store.db.orders) {
-                if (o.eventId == eventId && o.status == OrderStatus.PAID) {
-                    booking.refundInTransaction(o);
+            for (Order o : this.store.getDatabase().getOrders()) {
+                if (o.getEventId() == eventId && o.getStatus() == OrderStatus.PAID) {
+                    this.booking.refundInTransaction(o);
                     count++;
                 }
             }
-            store.save();
+            this.store.save();
             return count;
         }
     }

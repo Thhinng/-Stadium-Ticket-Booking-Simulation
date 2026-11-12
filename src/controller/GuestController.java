@@ -18,41 +18,41 @@ public class GuestController {
     }
 
     public void run() {
-        guestView.showMatches(eventService.listPublic());
+        this.guestView.showMatches(this.eventService.listPublic());
 
         while (true) {
-            guestView.showMenu();
-            int choice = console.askInt("Guest > ");
+            this.guestView.showMenu();
+            int choice = this.console.askInt("Guest > ");
 
             try {
                 switch (choice) {
                     case 1:
-                        guestView.showMatches(eventService.listPublic());
+                        this.guestView.showMatches(this.eventService.listPublic());
                         break;
                     case 2:
-                        showMatchDetails();
+                        this.showMatchDetails();
                         break;
                     case 0:
                         return;
                     default:
-                        console.error("Vui lòng chọn chức năng có trong menu.");
+                        this.console.error("Vui lòng chọn chức năng có trong menu.");
                 }
             } catch (IllegalArgumentException e) {
-                console.error(e.getMessage());
+                this.console.error(e.getMessage());
             }
         }
     }
 
     private void showMatchDetails() {
-        int matchId = console.askInt("Nhập mã trận đấu: ");
+        int matchId = this.console.askInt("Nhập mã trận đấu: ");
 
-        for (Event event : eventService.listPublic()) {
-            if (event.id == matchId) {
-                guestView.showDetail(event);
+        for (Event event : this.eventService.listPublic()) {
+            if (event.getId() == matchId) {
+                this.guestView.showDetail(event);
                 return;
             }
         }
 
-        console.error("Trận đấu này không có trong sảnh Guest.");
+        this.console.error("Trận đấu này không có trong sảnh Guest.");
     }
 }

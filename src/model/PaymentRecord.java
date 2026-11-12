@@ -1,15 +1,15 @@
 package model;
 
 public class PaymentRecord {
-    public int id;
-    public int userId;
-    public int orderId;  // 0 means unsuccessful attempt without an order
-    public String type;  // PAYMENT or REFUND
-    public String method;
-    public String result; // SUCCESS or FAILED
-    public long amount;
-    public String reference;
-    public long createdAt;
+    private int id;
+    private int userId;
+    private int orderId;  // 0 means unsuccessful attempt without an order
+    private String type;  // PAYMENT or REFUND
+    private String method;
+    private String result; // SUCCESS or FAILED
+    private long amount;
+    private String reference;
+    private long createdAt;
 
     public PaymentRecord(int id, int userId, int orderId, String type, String method, String result,
                          long amount, String reference, long createdAt) {
@@ -23,4 +23,14 @@ public class PaymentRecord {
         this.reference = reference;
         this.createdAt = createdAt;
     }
+
+    public int getId() { return this.id; }
+    public int getUserId() { return this.userId; }
+    public int getOrderId() { return this.orderId; }
+    public String getType() { return this.type; }
+    public String getMethod() { return this.method; }
+    public String getResult() { return this.result; }
+    public long getAmount() { return this.amount; }
+    public String getReference() { return this.reference; }
+    public long getCreatedAt() { return this.createdAt; }
 }

@@ -2,17 +2,18 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 public class Order {
-    public int id;
-    public int userId;
-    public int eventId;
-    public List<String> seatIds;
-    public long total;
-    public long purchasedAt;
-    public OrderStatus status;
-    public String paymentMethod;
-    public String paymentReference;
+    private int id;
+    private int userId;
+    private int eventId;
+    private List<String> seatIds;
+    private long total;
+    private long purchasedAt;
+    private OrderStatus status;
+    private String paymentMethod;
+    private String paymentReference;
 
     public Order(int id, int userId, int eventId, List<String> seatIds, long total,
                  long purchasedAt, OrderStatus status, String paymentMethod, String paymentReference) {
@@ -26,4 +27,15 @@ public class Order {
         this.paymentMethod = paymentMethod;
         this.paymentReference = paymentReference;
     }
+
+    public int getId() { return this.id; }
+    public int getUserId() { return this.userId; }
+    public int getEventId() { return this.eventId; }
+    public List<String> getSeatIds() { return Collections.unmodifiableList(this.seatIds); }
+    public long getTotal() { return this.total; }
+    public long getPurchasedAt() { return this.purchasedAt; }
+    public OrderStatus getStatus() { return this.status; }
+    public void setStatus(OrderStatus value) { this.status = value; }
+    public String getPaymentMethod() { return this.paymentMethod; }
+    public String getPaymentReference() { return this.paymentReference; }
 }
